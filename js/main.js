@@ -1,12 +1,52 @@
-export function init() {
-
+export class Main {
+ constructor() {
 	const canvas = document.getElementById("renderCanvas"); // Get the canvas element
-	const engine = new BABYLON.Engine(canvas, true, { stencil: true }); // Generate the BABYLON 3D engine
+	this.engine = new BABYLON.Engine(canvas, true, { stencil: true }); // Generate the BABYLON 3D engine
 
+	const PromiseScene = this.#createScene(); //Call the createScene function that returns a promise
+	PromiseScene.then(scene => {
+		// Register a render loop to repeatedly render the scene
+		this.engine.runRenderLoop(function () {
+			scene.render();
+		});
 
-	const createScene = async function () {
+		scene.onKeyboardObservable.add((kbInfo) => {
+			if (kbInfo.type == BABYLON.KeyboardEventTypes.KEYDOWN) {
+				console.log("KEY DOWN: ", kbInfo.event.key);
+				switch (kbInfo.event.key) {
+					case 'A':
+					case 'a':
+
+						break;
+					case 'S':
+					case 's':
+
+						break;
+					case 'D':
+					case 'd':
+						break;
+				}
+				 switch (key) {
+                        case '`':
+                        case '~':
+                            this.#toggleDebugger(scene);
+                            break;
+                    }
+			}
+			else if (kbInfo.type == BABYLON.KeyboardEventTypes.KEYUP) {
+
+			}
+		});
+
+		this.boundResizeHandler = this.#handleResize.bind(this);
+        window.addEventListener('resize', this.boundResizeHandler);
+
+	})
+
+}
+	async #createScene() {
 		// Creates a basic Babylon Scene object
-		const scene = new BABYLON.Scene(engine);
+		const scene = new BABYLON.Scene(this.engine);
 		// Creates and positions a free camera
 		const camera = new BABYLON.UniversalCamera("camera", new BABYLON.Vector3(0, 15, 0), scene);
 		// Targets the camera to scene origin
@@ -29,42 +69,17 @@ export function init() {
 		return scene;
 	};
 
-
-	const PromiseScene = createScene(); //Call the createScene function that returns a promise
-	PromiseScene.then(scene => {
-		// scene.debugLayer.show();//show debugger
-		// Register a render loop to repeatedly render the scene
-		engine.runRenderLoop(function () {
-			scene.render();
-		});
-
-		scene.onKeyboardObservable.add((kbInfo) => {
-			if (kbInfo.type == BABYLON.KeyboardEventTypes.KEYDOWN) {
-				console.log("KEY DOWN: ", kbInfo.event.key);
-				switch (kbInfo.event.key) {
-					case 'A':
-					case 'a':
-
-						break;
-					case 'S':
-					case 's':
-
-						break;
-					case 'D':
-					case 'd':
-						break;
-				}
-			}
-			else if (kbInfo.type == BABYLON.KeyboardEventTypes.KEYUP) {
-
-			}
-		});
-
-
-	})
-
 	// Watch for browser/canvas resize events
-	window.addEventListener("resize", function () {
-		engine.resize();
-	});
+	#handleResize() {
+        this.engine.resize();
+    }
+
+    #toggleDebugger(scene) {
+        if (scene.debugLayer.isVisible()) {
+            scene.debugLayer.hide();
+        } else {
+            scene.debugLayer.show();
+            document.body.style.cursor = "revert";
+        }
+    }
 }

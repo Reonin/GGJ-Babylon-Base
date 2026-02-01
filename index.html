@@ -17,7 +17,7 @@
 
 	<meta name="theme-color" content="#fafafa">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>Plague Doctor</title>
+	<title>GGJ Babylon Base</title>
 	<style>
 		html,
 		body {
@@ -46,17 +46,26 @@
 
 	<script src="js/plugins.js"></script>
 	<script type="module">
-		let hostPath;
-		if (location.hostname === "localhost") {
-			hostPath = '.';
-		}
-		else {
-			hostPath = '/GGJ26';
-		}
+		 let hostPath;
+        if(location.hostname === "localhost"){
+            hostPath = '.';
+        }
+        else {
+            hostPath = '/GGJ-Babylon-Base';
+        }
 
-		let { init } = await import(hostPath + '/js/main.js');
+        let { Main } = await import( hostPath + '/js/main.js');
 
-		init();
+		//Example of how to load a font
+        const modernAntiqua = new FontFace("Modern Antiqua", 'url("fonts/ModernAntiqua-Regular.ttf")', {
+            style: "normal",
+            weight: "400"
+        });
+
+        document.fonts.add(modernAntiqua);
+        document.fonts.ready.then(() => {
+              const init = new Main();
+        });
 	</script>
 </body>
 
