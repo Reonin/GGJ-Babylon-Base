@@ -1,8 +1,8 @@
-# GGJ26-Mask
+# GGJ26-Base
 
 ## Available Commands
 
-In local environment Navigate to 'GGJ26-Mask' Folder directory
+In local environment Navigate to 'GGJ-Babylon-Base' Folder directory
 
 Run Server locally:
 Python 2 — python -m SimpleHTTPServer 8000
