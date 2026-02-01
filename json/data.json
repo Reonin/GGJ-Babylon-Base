@@ -1,0 +1,14 @@
+{
+    "1": {
+        "challenge": "test",
+        "difficulty": "easy"
+    },
+    "2": {
+        "challenge": "paradoxical",
+        "difficulty": "hard"
+    },
+    "3": {
+        "challenge": "garlic",
+        "difficulty": "easy"
+    }
+}
