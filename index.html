@@ -13,7 +13,7 @@
 
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/main.css">
-	<link rel="icon" type="image/x-icon" href="./favicon.ico">
+	<link rel="icon" type="image/x-icon" href="./favicon/favicon.ico">
 
 	<meta name="theme-color" content="#fafafa">
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -46,15 +46,17 @@
 	<p style="font-family: 'Modern Antiqua'", display:none >test</p>
 	<script src="js/plugins.js"></script>
 	<script type="module">
-		 let hostPath;
+		import { HOSTPATH } from "./js/Constants.js";
+
+		let hostPath;
         if(location.hostname === "localhost"){
             hostPath = '.';
         }
         else {
-            hostPath = '/GGJ-Babylon-Base';
+            hostPath = HOSTPATH;
         }
 
-        let { Main } = await import( hostPath + '/js/main.js');
+        let { Main } = await import( hostPath + '/js/Main.js');
 
 		//Example of how to load a font
         const modernAntiqua = new FontFace("Modern Antiqua", 'url("fonts/ModernAntiqua-Regular.ttf")', {
