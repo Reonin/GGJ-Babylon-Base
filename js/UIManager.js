@@ -6,7 +6,7 @@ export default class UIManager {
 	#scoreLabel = {};
 	#title = {};
 	#subtitle = {};
-	#challenge = {};
+	#timer = {};
 	currentRound = 0;
 	#startScreenBg = {};
 
@@ -40,8 +40,8 @@ export default class UIManager {
 		this.#title = this.advancedTexture.getControlByName("Title");
 		this.#subtitle = this.advancedTexture.getControlByName("Subtitle");
 
-		this.#challenge = this.advancedTexture.getControlByName("challenge");
-		this.#challenge.paddingLeft = "30px";
+		this.#timer = this.advancedTexture.getControlByName("Timer");
+		this.#timer.paddingLeft = "30px";
 
 		this.#setupTimer(scene, engine);
 		this.#setupScore(scene, engine);
@@ -105,14 +105,6 @@ export default class UIManager {
 			}
 		});
 
-		muteButton.onPointerEnterObservable.add(() => {
-			document.body.style.cursor = "pointer";
-		});
-
-		muteButton.onPointerOutObservable.add(() => {
-			document.body.style.cursor = "none";
-		});
-
 		advancedTexture.addControl(muteButton);
 	}
 
@@ -135,7 +127,7 @@ export default class UIManager {
 	}
 
 	#setupTimer(scene, engine) {
-		const target = this.#challenge;
+		const target = this.#timer;
 		let timeElapsed = 0;
 		const targetTime = 300;
 		let gameEnded = false;
@@ -148,22 +140,18 @@ export default class UIManager {
 					resetToDefault();
 					gameEnded = true;
 					window.gameStarted = false;
-					target.text = "Too Many Victims!";
+					target.text = "Game Over";
 					console.log("%cGame Over - Too Many Victims!", "color: red; font-size: 24px;");
-				}
-				else if (timeElapsed >= targetTime) {
-					resetToDefault();
-					gameEnded = true;
-					window.gameStarted = false;
-					target.text = "Time's Up!";
-					console.log("%cGame Over - Time's Up!", "color: red; font-size: 24px;");
+					scene.onBeforeRenderObservable.remove(this);
 				}
 				else {
-					target.text = `Villagers: ${ 2 }/3`;
+					target.text = `Time: ${timeElapsed.toFixed(1)}s`;
 				}
 			}
 		});
 	}
+
+
 
 	resetToDefault() {
 		this.#title.isVisible = true;

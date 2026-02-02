@@ -8,7 +8,7 @@ export class Main {
 	this.externalDataManager = new ExternalDataManager();
 	this.scene = this.#createScene(); //Call the createScene function that returns a promise
 	
-	this.#setupKeyBoard(this.scene);
+	this.#setupKeyBoard();
 		// Register a render loop to repeatedly render the scene
 		this.engine.runRenderLoop(() => {
 			this.scene.render();
