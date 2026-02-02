@@ -1,60 +1,28 @@
 import { ExternalDataManager } from "./ExternalDataManager.js";
+import UIManager from "./UIManager.js";
 
 export class Main {
  constructor() {
 	this.canvas = document.getElementById("renderCanvas"); // Get the canvas element
 	this.engine = new BABYLON.Engine(this.canvas, true, { stencil: true }); // Generate the BABYLON 3D engine
 	this.externalDataManager = new ExternalDataManager();
-
-	const PromiseScene = this.#createScene(); //Call the createScene function that returns a promise
-	PromiseScene.then(scene => {
+	this.scene = this.#createScene(); //Call the createScene function that returns a promise
+	
+	this.#setupKeyBoard(this.scene);
 		// Register a render loop to repeatedly render the scene
-		this.engine.runRenderLoop(function () {
-			scene.render();
+		this.engine.runRenderLoop(() => {
+			this.scene.render();
 		});
 
-		scene.onKeyboardObservable.add((kbInfo) => {
-			if (kbInfo.type == BABYLON.KeyboardEventTypes.KEYDOWN) {
-				console.log("KEY DOWN: ", kbInfo.event.key);
-				switch (kbInfo.event.key) {
-					case 'W':
-					case 'w':
-
-						break;
-					case 'A':
-					case 'a':
-
-						break;
-					case 'S':
-					case 's':
-
-						break;
-					case 'D':
-					case 'd':
-						break;
-					case ' ':
-						// Spacebar
-						break;
-				}
-				 switch (key) {
-                        case '`':
-                        case '~':
-                            this.#toggleDebugger(scene);
-                            break;
-                    }
-			}
-			else if (kbInfo.type == BABYLON.KeyboardEventTypes.KEYUP) {
-
-			}
-		});
-
+		
 		this.boundResizeHandler = this.#handleResize.bind(this);
         window.addEventListener('resize', this.boundResizeHandler);
+	
 
-	})
+	this.uimanager = new UIManager(BABYLON, this.scene, this.engine);
 
 }
-	async #createScene() {
+	#createScene() {
 		// Creates a basic Babylon Scene object
 		const scene = new BABYLON.Scene(this.engine);
 		// Creates and positions a free camera
@@ -78,6 +46,44 @@ export class Main {
 
 		return scene;
 	};
+
+	#setupKeyBoard(){
+		this.scene.onKeyboardObservable.add((kbInfo) => {
+			const key = kbInfo.event.key;
+			if (kbInfo.type == BABYLON.KeyboardEventTypes.KEYDOWN) {
+				console.log("KEY DOWN: ", key);
+				switch (key) {
+					case 'W':
+					case 'w':
+
+						break;
+					case 'A':
+					case 'a':
+
+						break;
+					case 'S':
+					case 's':
+
+						break;
+					case 'D':
+					case 'd':
+						break;
+					case ' ':
+						// Spacebar
+						break;
+				}
+				 switch (key) {
+                        case '`':
+                        case '~':
+                            this.#toggleDebugger(this.scene);
+                            break;
+                    }
+			}
+			else if (kbInfo.type == BABYLON.KeyboardEventTypes.KEYUP) {
+
+			}
+		});
+	}
 
 	// Watch for browser/canvas resize events
 	#handleResize() {
