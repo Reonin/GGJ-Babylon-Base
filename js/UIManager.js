@@ -81,7 +81,9 @@ export default class UIManager {
 		});
 
 		this.buttonList.startGameButton.onPointerOutObservable.add(() => {
-			document.body.style.cursor = "none";
+			if(window.gameStarted){
+				document.body.style.cursor = "none";
+			}
 		});
 	}
 
