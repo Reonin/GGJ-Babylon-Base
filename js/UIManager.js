@@ -1,3 +1,5 @@
+import HealthBarHelper from "./HealthBarHelper.js";
+
 export default class UIManager {
 	buttonList = {
 		startGameButton: {},
@@ -12,7 +14,9 @@ export default class UIManager {
 
 	constructor(BABYLON, scene, engine) {
 		this.BABYLON = BABYLON;
-		this.advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI(
+		this.GUI = this.BABYLON.GUI;
+
+		this.advancedTexture = this.GUI.AdvancedDynamicTexture.CreateFullscreenUI(
 			"GUI",
 			true,
 			scene,
@@ -20,8 +24,21 @@ export default class UIManager {
 		);
 
 		this.#setUpHUD(scene, engine);
+		
+		this.healthBarHelper = new HealthBarHelper(this.GUI, this.advancedTexture);
+		scene.onBeforeRenderObservable.add(() => {
+			this.healthBarHelper.updateHealthBars();
+		});
+
 	}
 
+	createHealthBar(mesh){
+		this.healthBarHelper.createHealthBar(mesh);
+	}
+
+	updateHealthBars(){
+		this.healthBarHelper.updateHealthBars();
+	}
 
 	async #setUpHUD(scene, engine) {
 
@@ -32,6 +49,7 @@ export default class UIManager {
 
 		this.#setUpButtons(this.advancedTexture);
 		this.#createMuteButton(this.advancedTexture);
+
 
 		this.#playerScore = this.advancedTexture.getControlByName("PlayerScore");
 		this.#playerScore.paddingLeft = "30px";
@@ -45,15 +63,16 @@ export default class UIManager {
 
 		this.#setupTimer(scene, engine);
 		this.#setupScore(scene, engine);
+
 	}
 
 	#createStartScreenBackground(advancedTexture) {
-		const bgImage = new BABYLON.GUI.Image("startScreenBg", "./assets/plaguearism.png");
+		const bgImage = new this.GUI.Image("startScreenBg", "./assets/plaguearism.png");
 		bgImage.width = "100%";
 		bgImage.height = "100%";
-		bgImage.stretch = BABYLON.GUI.Image.STRETCH_UNIFORM;
-		bgImage.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
-		bgImage.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
+		bgImage.stretch = this.GUI.Image.STRETCH_UNIFORM;
+		bgImage.horizontalAlignment = this.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+		bgImage.verticalAlignment = this.GUI.Control.VERTICAL_ALIGNMENT_CENTER;
 		bgImage.zIndex = -1; // Behind other elements
 
 		advancedTexture.addControl(bgImage);
@@ -88,14 +107,14 @@ export default class UIManager {
 	}
 
 	#createMuteButton(advancedTexture) {
-		const muteButton = BABYLON.GUI.Button.CreateSimpleButton("muteBtn", "Mute");
+		const muteButton = this.GUI.Button.CreateSimpleButton("muteBtn", "Mute");
 		muteButton.width = "80px";
 		muteButton.height = "30px";
 		muteButton.color = "white";
 		muteButton.cornerRadius = 5;
 		muteButton.background = "green";
-		muteButton.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
-		muteButton.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+		muteButton.horizontalAlignment = this.GUI.Control.HORIZONTAL_ALIGNMENT_LEFT;
+		muteButton.verticalAlignment = this.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
 		muteButton.left = "350px";
 		muteButton.top = "-10px";
 
